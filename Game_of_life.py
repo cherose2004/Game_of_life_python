@@ -108,7 +108,7 @@ def display_text(text):
         screen.blit(text_to_display,(math.fabs(ScreenSize[0]/2-6*len(text[n])/2),text_surface.get_height()/2+text_surface.get_height()*n))
 #####################################################################
 
-text_when_wait=["Press 'b' to start the game.",\
+text_when_wait=["Press 'b' to start the game. Press 'c' to change the size of the game map",\
                 "Press number to change the property of life",\
                 "Now, let's begin the game!!"]
 warning_text_when_run=["",\
@@ -118,10 +118,10 @@ text_when_running=["",\
                    "",\
                    ""]
 text_when_peace=["Now, world is in the peace ~~~~~~~", \
-                 "Press 'b' to start the game.", \
+                 "Press 'b' to start the game. Press 'c' to change the size of the game map", \
                  "Press number to change the property of life"]
 text_when_zero=["Now, all life has been died!!!", \
-                "Press 'b' to start the game.", \
+                "Press 'b' to start the game. Press 'c' to change the size of the game map", \
                 "Press number to change the property of life"]
 CSmode_text=["Please enter the size of the game (length,wide):",\
              "",\
