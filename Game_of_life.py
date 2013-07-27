@@ -8,6 +8,7 @@ import math
 
 #b键：开始
 #s键：暂停
+#c键：改变size
 #0~9数字键：生成存活率为 0% ~ 9% 的随机世界（暂停状态）
 #鼠标点击：改变当前细胞状态（暂停状态）
 
@@ -122,7 +123,12 @@ text_when_peace=["Now, world is in the peace ~~~~~~~", \
 text_when_zero=["Now, all life has been died!!!", \
                 "Press 'b' to start the game.", \
                 "Press number to change the property of life"]
+CSmode_text=["Please enter the size of the game (length,wide):",\
+             "",\
+             ""]
 pygame.init()
+FPSclock=pygame.time.Clock()
+FPS=30
 ScreenSize=(640,480)
 screen=pygame.display.set_mode(ScreenSize,0,32)
 screen.fill((255,255,255))
@@ -155,7 +161,7 @@ for y in range(0,NumW+2):
         GameLifeMatrixRow.append(0)
     GameLifeMatrix.append(GameLifeMatrixRow)
 GameLifeMatrixZero=copy.deepcopy(GameLifeMatrix)#复制一个全0矩阵为后面判断做准备
-#生成一个存活率为50%的世界
+#生成一个存活率为10%的世界
 random_generate(NumL,NumW,0.1)
 
 #变量 Run State 为了控制游戏是否在进行
@@ -164,6 +170,12 @@ RunState=0
 Year=0
 #warning提示flag
 have_warning=0
+#change size mode flag
+CSmode=0
+#初始化输入的键
+NumInter="begin_CS"
+#初始化输入的文字
+InterText=""
 #开始循环
 while True:
     for event in pygame.event.get():
@@ -172,85 +184,132 @@ while True:
             sys.exit()
         elif event.type == KEYDOWN:
             if event.key==K_b: #b键开始
-                RunState=1
+                if CSmode==0:
+                    RunState=1
             elif event.key==K_s: #s键暂停，年限不归零
-                have_warning=0
-                RunState=0
-                display_text(text_when_wait)
+                if CSmode==0:
+                    have_warning=0
+                    RunState=0
+                    display_text(text_when_wait)
+            elif event.key==K_c: #c键进入改变size的模式
+                if RunState==0:
+                    CSmode=1
+                else:
+                    have_warning=1
             # 数字键产生随机生命（暂停状态，年限归零）
             elif event.key==K_0:
                 if RunState==0:
-                    Year=0
-                    random_generate(NumL,NumW,0)
-                    Year=0
+                    if CSmode==0:
+                        Year=0
+                        random_generate(NumL,NumW,0)
+                    else:
+                        NumInter=0
                 else:
                     have_warning=1
             elif event.key==K_1:
                 if RunState==0:
-                    Year=0
-                    random_generate(NumL,NumW,0.1)
+                    if CSmode==0:
+                        Year=0
+                        random_generate(NumL,NumW,0.1)
+                    else:
+                        NumInter=1
                 else:
                     have_warning=1
             elif event.key==K_2:
                 if RunState==0:
-                    Year=0
-                    random_generate(NumL,NumW,0.2)
+                    if CSmode==0:
+                        Year=0
+                        random_generate(NumL,NumW,0.2)
+                    else:
+                        NumInter=2
                 else:
                     have_warning=1
             elif event.key==K_3:
                 if RunState==0:
-                    Year=0
-                    random_generate(NumL,NumW,0.3)
+                    if CSmode==0:
+                        Year=0
+                        random_generate(NumL,NumW,0.3)
+                    else:
+                        NumInter=3
                 else:
                     have_warning=1
             elif event.key==K_4:
                 if RunState==0:
-                    Year=0
-                    random_generate(NumL,NumW,0.4)
+                    if CSmode==0:
+                        Year=0
+                        random_generate(NumL,NumW,0.4)
+                    else:
+                        NumInter=4
                 else:
                     have_warning=1
             elif event.key==K_5:
                 if RunState==0:
-                    Year=0
-                    random_generate(NumL,NumW,0.5)
+                    if CSmode==0:
+                        Year=0
+                        random_generate(NumL,NumW,0.5)
+                    else:
+                        NumInter=5
                 else:
                     have_warning=1
             elif event.key==K_6:
                 if RunState==0:
-                    Year=0
-                    random_generate(NumL,NumW,0.6)
+                    if CSmode==0:
+                        Year=0
+                        random_generate(NumL,NumW,0.6)
+                    else:
+                        NumInter=6
                 else:
                     have_warning=1
             elif event.key==K_7:
                 if RunState==0:
-                    Year=0
-                    random_generate(NumL,NumW,0.7)
+                    if CSmode==0:
+                        Year=0
+                        random_generate(NumL,NumW,0.7)
+                    else:
+                        NumInter=7
                 else:
                     have_warning=1
             elif event.key==K_8:
                 if RunState==0:
-                    Year=0
-                    random_generate(NumL,NumW,0.8)
+                    if CSmode==0:
+                        Year=0
+                        random_generate(NumL,NumW,0.8)
+                    else:
+                        NumInter=8
                 else:
                     have_warning=1
             elif event.key==K_9:
                 if RunState==0:
-                    Year=0
-                    random_generate(NumL,NumW,0.9)
+                    if CSmode==0:
+                        Year=0
+                        random_generate(NumL,NumW,0.9)
+                    else:
+                        NumInter=9
                 else:
                     have_warning=1
+            elif event.key==K_RETURN:
+                if CSmode==1:
+                    NumInter="return"
+            elif event.key==8: #in my computer, it is delete键
+                if CSmode==1:
+                    NumInter="delete"
+            elif event.key==44:
+                if CSmode==1:# in my computer, it is ,(<)键
+                    NumInter=","
         elif event.type==MOUSEBUTTONDOWN:
             if RunState==0:
-                #返回鼠标点击的细胞坐标，左上角开始，第一个为(0,0)
-                ClickX=int((event.pos[0]-x_begin)/length)
-                ClickY=((event.pos[1]-y_begin)/Wide)
-                #改变点击位置细胞状态
-                if visit_matrix(ClickX,ClickY):
-                    change_cell(ClickX,ClickY,0)
-                else:
-                    change_cell(ClickX,ClickY,1)
+                if CSmode==0:
+                    #返回鼠标点击的细胞坐标，左上角开始，第一个为(0,0)
+                    ClickX=int((event.pos[0]-x_begin)/length)
+                    ClickY=((event.pos[1]-y_begin)/Wide)
+                    #改变点击位置细胞状态
+                    if visit_matrix(ClickX,ClickY):
+                        change_cell(ClickX,ClickY,0)
+                    else:
+                        change_cell(ClickX,ClickY,1)
             else:
                 have_warning=1
+    #正式开始game
     if RunState==1:
         GameLifeMatrix_copy=copy.deepcopy(GameLifeMatrix) # copy一个matrix，为了验证是否进化已经停止
         Run()
@@ -266,5 +325,90 @@ while True:
             have_warning=0
             display_text(text_when_zero)
     else:
-        pass
+        if CSmode==1:
+            if NumInter=="begin_CS":
+                CSmode_text[1]=str(NumL)+","+str(NumW)
+                display_text(CSmode_text)
+                NumInter=" "
+            elif NumInter=="delete":
+                CSmode_text[1]=CSmode_text[1][:len(CSmode_text[1])-1]
+                display_text(CSmode_text)
+                NumInter=" "
+            elif NumInter=="return":
+                Year=0
+                have_warning=0
+                SizeTrue=0
+                InterText=CSmode_text[1]
+                if InterText.find(",")==-1:
+                    SizeTrue=0
+                else:
+                    Interx=InterText[:InterText.find(",")]
+                    Intery=InterText[InterText.find(",")+1:]
+                    try:
+                        Interx=int(Interx)
+                    except:
+                        SizeTrue=0
+                    else:
+                        try:
+                            Intery=int(Intery)
+                        except:
+                            SizeTrue=0
+                        else:
+                            SizeTrue=1
+                if Intery==0 or Interx==0:
+                    SizeTrue=0
+                if SizeTrue==1:
+                    screen.fill((255,255,255))
+                    NumL=Interx
+                    NumW=Intery
+                    #计算一个细胞的长宽
+                    length=int((ScreenSize[0]-2*x_begin)/NumL)
+                    Wide=int((ScreenSize[1]-2*y_begin+3*text_surface.get_height())/NumW)
+                    #画出整个map
+                    for x in range(0,NumL):
+                        for y in range(0,NumW):
+                            pygame.draw.rect(screen,(0,0,0), \
+                                            Rect((x_begin+x*length,y_begin+y*Wide), \
+                                                (length,Wide)),1)
+                    #生成细胞控制矩阵
+                    GameLifeMatrix=[]
+                    for y in range(0,NumW+2):
+                        GameLifeMatrixRow=[]
+                        for x in range(0,NumL+2):
+                            GameLifeMatrixRow.append(0)
+                        GameLifeMatrix.append(GameLifeMatrixRow)
+                    GameLifeMatrixZero=copy.deepcopy(GameLifeMatrix)#复制一个全0矩阵为后面判断做准备
+                    #判断默认存活率与FPS值（改进？？？）
+                    if NumL*NumW*0.1<=35*35*0.1:
+                        FPS=10
+                        PropertyLife=0.7
+                    else:
+                        FPS=30
+                        PropertyLife=0.1
+                    #生成一个存活率为PropertyLife的世界
+                    random_generate(NumL,NumW,PropertyLife)
+                    #变量 Run State 为了控制游戏是否在进行
+                    RunState=0
+                    #记录年限
+                    Year=0
+                    #warning提示flag
+                    have_warning=0
+                    #change size mode flag
+                    CSmode=0
+                    #初始化输入的键
+                    NumInter="begin_CS"
+                    #初始化输入的文字
+                    InterText=""
+                    CSmode_text[2]=""
+                    display_text(text_when_wait)
+                else:
+                    CSmode_text[2]="The size is wrong. Please enter again."
+                    display_text(CSmode_text)
+            elif NumInter==" ":
+                pass
+            else:
+                CSmode_text[1]=CSmode_text[1]+str(NumInter)
+                display_text(CSmode_text)
+                NumInter=" "
     pygame.display.update()
+    FPSclock.tick(FPS)
